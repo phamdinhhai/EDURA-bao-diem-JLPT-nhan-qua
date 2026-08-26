@@ -1,12 +1,12 @@
 const TARGET_ROTATION = Object.freeze({
-  // Tâm gốc theo chiều kim đồng hồ: 50%, 1000K, 800K, 500K, 100%, 80%.
-  // Kim thật hướng sang phải (3 giờ); rotation = góc kim - góc tâm gốc.
-  SCHOLARSHIP_50: 120,
-  VOUCHER_1000K: 60,
-  VOUCHER_800K: 0,
-  VOUCHER_500K: 300,
-  SCHOLARSHIP_100: 240,
-  SCHOLARSHIP_80: 180
+  // Kim thật hướng sang phải. Artwork production xác nhận mapping cũ lệch một ô (60°).
+  // Các góc này đã dịch ngược một sector để prize_code trùng ô nằm dưới kim.
+  SCHOLARSHIP_50: 60,
+  VOUCHER_1000K: 0,
+  VOUCHER_800K: 300,
+  VOUCHER_500K: 240,
+  SCHOLARSHIP_100: 180,
+  SCHOLARSHIP_80: 120
 });
 
 let rotation = 0;
