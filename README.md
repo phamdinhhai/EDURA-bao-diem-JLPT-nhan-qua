@@ -1,4 +1,4 @@
-﻿# Edura JLPT Spin V2
+# Edura JLPT Spin V2
 
 Landing page vòng quay 6 phần thưởng, frontend deploy trên Vercel; inventory và kết quả do Supabase quyết định; claim được đồng bộ sang Google Sheets.
 
@@ -14,7 +14,7 @@ Localhost tự chạy demo mode, không trừ kho và không ghi Google Sheets.
 
 1. Tạo Supabase project.
 2. Sửa `project_id` trong `supabase/config.toml`.
-3. Chạy lần lượt SQL `001_schema.sql` → `005_sheet_sync.sql` trong SQL Editor, hoặc dùng Supabase CLI migration workflow.
+3. Chạy lần lượt SQL `001_schema.sql` → `006_admin.sql` trong SQL Editor, hoặc dùng Supabase CLI migration workflow.
 4. Cài Supabase CLI và đăng nhập:
 
 ```powershell
@@ -23,7 +23,24 @@ npx -y supabase@latest link --project-ref YOUR_PROJECT_REF
 npx -y supabase@latest functions deploy spin
 npx -y supabase@latest functions deploy claim
 npx -y supabase@latest functions deploy campaign-status
+npx -y supabase@latest functions deploy admin
 ```
+
+## 2.1. Thiết lập tài khoản Admin
+
+1. Vào **Supabase Dashboard → Authentication → Users → Add user**.
+2. Tạo user bằng email và mật khẩu mạnh, bật **Auto Confirm User**.
+3. Sao chép UUID của user vừa tạo.
+4. Chạy trong SQL Editor:
+
+```sql
+insert into public.admin_users(user_id, display_name)
+values ('UUID_USER_VỪA_TẠO', 'Quản trị Edura');
+```
+
+5. Truy cập `https://TEN-MIEN-CUA-BAN/admin/` và đăng nhập.
+
+> Chỉ user có UUID trong `admin_users` mới gọi được API báo cáo hoặc điều chỉnh kho. Khi giảm tồn kho, hệ thống chỉ xóa các đơn vị còn `AVAILABLE`; quà đã trao hoặc đã nhận không bị thay đổi.
 
 ## 3. Google Sheets
 

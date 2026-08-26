@@ -4,6 +4,6 @@
   "private": true,
   "scripts": {
     "dev": "npx -y serve@14 . -l 4173",
-    "check": "node --check js/app.js && node --check js/api.js && node --check js/wheel.js"
+    "check": "node --check js/app.js && node --check js/api.js && node --check js/wheel.js && node --check admin/admin.js"
   }
 }

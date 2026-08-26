@@ -6,3 +6,5 @@ verify_jwt = false
 verify_jwt = false
 [functions.campaign-status]
 verify_jwt = false
+[functions.admin]
+verify_jwt = true
