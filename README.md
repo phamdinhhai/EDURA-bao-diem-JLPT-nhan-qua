@@ -73,7 +73,7 @@ window.EDURA_CONFIG = Object.freeze({
 3. Framework Preset: **Other**.
 4. Build Command: để trống.
 5. Output Directory: `.`.
-6. Deploy và gắn domain `quatang.edura.edu.vn` nếu cần.
+6. Deploy và gắn domain `vongquay.edura.edu.vn` nếu cần.
 
 ## Dữ liệu Google Sheet
 
