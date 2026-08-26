@@ -22,7 +22,13 @@ serve(async req=>{
     const requestUrl=new URL(req.url);
     const campaign='JLPT_SPIN_2026';
     if(req.method==='GET'){
-      const view=requestUrl.searchParams.get('view')||'dashboard';
+      const view=requestUrl.searchParams.get('view')||'bootstrap';
+      if(view==='bootstrap'){
+        const started=performance.now();
+        const {data,error}=await db.rpc('admin_bootstrap',{p_campaign:campaign,p_page_size:25});
+        if(error)throw error;
+        const response=json(data,200,origin);response.headers.set('Server-Timing',`db;dur=${(performance.now()-started).toFixed(1)}`);return response;
+      }
       if(view==='dashboard'){
         const {data,error}=await db.rpc('admin_dashboard',{p_campaign:campaign});
         if(error)throw error;return json(data,200,origin);
