@@ -41,10 +41,17 @@ serve(async req=>{
     }
     if(req.method==='POST'){
       const body=await req.json();
-      if(body.action!=='adjust_inventory')return json({code:'INVALID_ACTION'},400,origin);
-      const {data,error}=await db.rpc('admin_adjust_inventory',{p_campaign:campaign,p_prize_code:String(body.prize_code||''),p_delta:Number(body.delta),p_reason:String(body.reason||'').slice(0,300),p_admin_user:user.id});
-      if(error){const known=['INVALID_DELTA','REASON_REQUIRED','PRIZE_NOT_FOUND','INSUFFICIENT_AVAILABLE_INVENTORY'].find(x=>error.message?.includes(x));return json({code:known||'ADJUSTMENT_FAILED'},known?409:500,origin)}
-      return json(data,200,origin);
+      if(body.action==='adjust_inventory'){
+        const {data,error}=await db.rpc('admin_adjust_inventory',{p_campaign:campaign,p_prize_code:String(body.prize_code||''),p_delta:Number(body.delta),p_reason:String(body.reason||'').slice(0,300),p_admin_user:user.id});
+        if(error){const known=['INVALID_DELTA','REASON_REQUIRED','PRIZE_NOT_FOUND','INSUFFICIENT_AVAILABLE_INVENTORY'].find(x=>error.message?.includes(x));return json({code:known||'ADJUSTMENT_FAILED'},known?409:500,origin)}
+        return json(data,200,origin);
+      }
+      if(body.action==='reset_claims'){
+        const {data,error}=await db.rpc('admin_reset_claims',{p_campaign:campaign,p_reason:String(body.reason||'').slice(0,300),p_admin_user:user.id,p_confirmation:String(body.confirmation||'')});
+        if(error){const known=['CONFIRMATION_REQUIRED','REASON_REQUIRED'].find(x=>error.message?.includes(x));return json({code:known||'RESET_FAILED'},known?409:500,origin)}
+        return json(data,200,origin);
+      }
+      return json({code:'INVALID_ACTION'},400,origin);
     }
     return json({code:'METHOD_NOT_ALLOWED'},405,origin);
   }catch(error){console.error(error);return json({code:'ADMIN_API_FAILED'},500,origin)}
