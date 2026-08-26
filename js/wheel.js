@@ -1,11 +1,12 @@
 const TARGET_ROTATION = Object.freeze({
-  // Góc quay đưa tâm từng ô quà đến kim cố định ở vị trí 12 giờ.
-  SCHOLARSHIP_50: 330,
-  VOUCHER_1000K: 270,
-  VOUCHER_800K: 210,
-  VOUCHER_500K: 150,
-  SCHOLARSHIP_100: 90,
-  SCHOLARSHIP_80: 30
+  // Artwork có tâm ô Voucher 500K ở vị trí 12 giờ; mỗi tâm cách nhau 60°.
+  // Các góc dưới đây xoay đúng tâm ô đến kim, không cộng lệch nửa sector (30°).
+  VOUCHER_500K: 0,
+  VOUCHER_800K: 60,
+  VOUCHER_1000K: 120,
+  SCHOLARSHIP_50: 180,
+  SCHOLARSHIP_80: 240,
+  SCHOLARSHIP_100: 300
 });
 
 let rotation = 0;
