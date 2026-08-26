@@ -1,12 +1,15 @@
 import { serve } from 'https://deno.land/std@0.224.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-const baseHeaders={'Access-Control-Allow-Headers':'authorization, x-client-info, apikey, content-type','Access-Control-Allow-Methods':'GET,POST,OPTIONS'};
-const json=(body:unknown,status=200,origin='*')=>new Response(JSON.stringify(body),{status,headers:{...baseHeaders,'Access-Control-Allow-Origin':origin,'Content-Type':'application/json','Cache-Control':'no-store'}});
+const baseHeaders={'Access-Control-Allow-Headers':'authorization, x-client-info, apikey, content-type','Access-Control-Allow-Methods':'GET,POST,OPTIONS','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer'};
+const configuredOrigins=(Deno.env.get('ADMIN_ALLOWED_ORIGINS')||'').split(',').map(x=>x.trim()).filter(Boolean);
+const allowedOrigin=(origin:string)=>!origin||configuredOrigins.includes(origin)||/^https:\/\/[a-z0-9-]+\.vercel\.app$/i.test(origin)||/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin);
+const json=(body:unknown,status=200,origin='')=>new Response(JSON.stringify(body),{status,headers:{...baseHeaders,...(origin?{'Access-Control-Allow-Origin':origin,'Vary':'Origin'}:{}),'Content-Type':'application/json','Cache-Control':'no-store'}});
 
 serve(async req=>{
-  const origin=req.headers.get('origin')||'*';
-  if(req.method==='OPTIONS')return new Response('ok',{headers:{...baseHeaders,'Access-Control-Allow-Origin':origin}});
+  const origin=req.headers.get('origin')||'';
+  if(!allowedOrigin(origin))return json({code:'ORIGIN_FORBIDDEN'},403);
+  if(req.method==='OPTIONS')return new Response('ok',{headers:{...baseHeaders,...(origin?{'Access-Control-Allow-Origin':origin,'Vary':'Origin'}:{})}});
   try{
     const url=Deno.env.get('SUPABASE_URL')!;
     const anon=Deno.env.get('SUPABASE_ANON_KEY')!;
