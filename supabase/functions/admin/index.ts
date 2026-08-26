@@ -51,6 +51,14 @@ serve(async req=>{
         if(error){const known=['CONFIRMATION_REQUIRED','REASON_REQUIRED'].find(x=>error.message?.includes(x));return json({code:known||'RESET_FAILED'},known?409:500,origin)}
         return json(data,200,origin);
       }
+      if(body.action==='delete_recipients'){
+        const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+        const spinIds=[...new Set(Array.isArray(body.spin_ids)?body.spin_ids.map(String).filter(id=>uuid.test(id)):[])];
+        if(!spinIds.length||spinIds.length>100)return json({code:spinIds.length?'SELECTION_LIMIT':'SELECTION_REQUIRED'},400,origin);
+        const {data,error}=await db.rpc('admin_delete_recipients',{p_campaign:campaign,p_spin_ids:spinIds,p_reason:String(body.reason||'').slice(0,300),p_admin_user:user.id,p_confirmation:String(body.confirmation||'')});
+        if(error){const known=['CONFIRMATION_REQUIRED','REASON_REQUIRED','SELECTION_REQUIRED','SELECTION_LIMIT','SPIN_SELECTION_INVALID'].find(x=>error.message?.includes(x));return json({code:known||'DELETE_RECIPIENTS_FAILED'},known?409:500,origin)}
+        return json(data,200,origin);
+      }
       return json({code:'INVALID_ACTION'},400,origin);
     }
     return json({code:'METHOD_NOT_ALLOWED'},405,origin);
