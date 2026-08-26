@@ -1,6 +1,6 @@
 # Edura JLPT Spin V2
 
-Landing page vòng quay 6 phần thưởng, frontend deploy trên Vercel; inventory và kết quả do Supabase quyết định; claim được đồng bộ sang Google Sheets.
+Landing page vòng quay 7 phần thưởng / 80 đơn vị quà, frontend deploy trên Vercel; inventory và kết quả do Supabase quyết định; claim được đồng bộ sang Google Sheets. Xác suất tại mỗi lượt bằng số unit `AVAILABLE` của từng quà chia cho tổng unit `AVAILABLE`, nên tự thay đổi theo tồn kho thực tế.
 
 ## 1. Chạy local
 
