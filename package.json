@@ -1,0 +1,9 @@
+﻿{
+  "name": "edura-jlpt-spin",
+  "version": "2.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npx -y serve@14 . -l 4173",
+    "check": "node --check js/app.js && node --check js/api.js && node --check js/wheel.js"
+  }
+}

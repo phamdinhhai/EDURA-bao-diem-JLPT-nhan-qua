@@ -1,0 +1,1 @@
+﻿alter table spins add column if not exists sheet_sync_status text not null default 'PENDING' check(sheet_sync_status in('PENDING','SYNCED','FAILED')),add column if not exists sheet_synced_at timestamptz,add column if not exists sheet_sync_attempts int not null default 0,add column if not exists sheet_sync_error text,add column if not exists claim_web_url text;

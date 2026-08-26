@@ -1,0 +1,8 @@
+﻿const CONFIG=window.EDURA_CONFIG||{};
+const API=String(CONFIG.apiUrl||'').replace(/\/$/,'');
+const DEMO=CONFIG.demoMode===true;
+const prizes=[['SCHOLARSHIP_100','Học bổng 100% JLPT Video'],['SCHOLARSHIP_80','Học bổng 80% JLPT Video'],['SCHOLARSHIP_50','Học bổng 50% JLPT Video'],['VOUCHER_1000K','Voucher 1.000.000đ'],['VOUCHER_800K','Voucher 800.000đ'],['VOUCHER_500K','Voucher 500.000đ']];
+async function request(path,payload){if(!API)throw Object.assign(new Error('API_NOT_CONFIGURED'),{code:'API_NOT_CONFIGURED'});const res=await fetch(`${API}/${path}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});let data={};try{data=await res.json()}catch{data={code:'INVALID_SERVER_RESPONSE'}}if(!res.ok)throw Object.assign(new Error(data.message||data.code||'REQUEST_FAILED'),{code:data.code});return data}
+export async function spin(participant,requestId){if(DEMO){await new Promise(r=>setTimeout(r,700));const i=Math.abs([...participant.phone].reduce((a,c)=>a+c.charCodeAt(0),0))%prizes.length;return{spin_id:requestId,prize_code:prizes[i][0],prize_name:prizes[i][1],sector:i,turn_left:0,demo:true}}return request('spin',{campaign:'JLPT_SPIN_2026',participant,request_id:requestId})}
+export async function claim(spinId,webUrl){if(DEMO)return{ok:true,demo:true};return request('claim',{spin_id:spinId,web_url:webUrl})}
+export async function campaignStatus(){if(DEMO)return{active:true,remaining:50,demo:true};const res=await fetch(`${API}/campaign-status?campaign=JLPT_SPIN_2026`);const data=await res.json();if(!res.ok)throw Object.assign(new Error(data.code||'STATUS_FAILED'),{code:data.code});return data}

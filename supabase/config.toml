@@ -1,0 +1,8 @@
+project_id = "lhwgtzfjinonyvjnoeqo"
+
+[functions.spin]
+verify_jwt = false
+[functions.claim]
+verify_jwt = false
+[functions.campaign-status]
+verify_jwt = false
