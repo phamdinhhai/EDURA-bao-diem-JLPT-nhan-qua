@@ -49,9 +49,9 @@ serve(async req=>{
         if(error){const known=['INVALID_DELTA','REASON_REQUIRED','PRIZE_NOT_FOUND','INSUFFICIENT_AVAILABLE_INVENTORY'].find(x=>error.message?.includes(x));return json({code:known||'ADJUSTMENT_FAILED'},known?409:500,origin)}
         return json(data,200,origin);
       }
-      if(body.action==='reset_claims'){
-        const {data,error}=await db.rpc('admin_reset_claims',{p_campaign:campaign,p_reason:String(body.reason||'').slice(0,300),p_admin_user:user.id,p_confirmation:String(body.confirmation||'')});
-        if(error){const known=['CONFIRMATION_REQUIRED','REASON_REQUIRED'].find(x=>error.message?.includes(x));return json({code:known||'RESET_FAILED'},known?409:500,origin)}
+      if(body.action==='reset_all_spin_data'){
+        const {data,error}=await db.rpc('admin_reset_all_spin_data',{p_campaign:campaign,p_reason:String(body.reason||'').slice(0,300),p_admin_user:user.id,p_confirmation:String(body.confirmation||'')});
+        if(error){const known=['CONFIRMATION_REQUIRED','REASON_REQUIRED'].find(x=>error.message?.includes(x));return json({code:known||'RESET_ALL_SPIN_DATA_FAILED'},known?409:500,origin)}
         return json(data,200,origin);
       }
       if(body.action==='delete_recipients'){
